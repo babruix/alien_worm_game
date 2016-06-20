@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Alien game</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport"
+        content="width=device-width, maximum-scale=1.0, user-scalable=no"/>
+  <script src="css/style.css"></script>
+  <script src="js/phaser.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+
+  var game = new Phaser.Game(getWidth(), 500, Phaser.AUTO, '', {
+    preload: preload,
+    create: create,
+    update: update
+  });
+
+  function init() {
+    // Set scale options
+    game.input.maxPointers = 1; // No multi-touch
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.scale.pageAlignHorizontally = true;
+    game.scale.pageAlignVertically = true;
+  }
+
+  function preload() {
+    this.game.load.image('worm', 'assets/worm.png');
+    this.game.load.image('alien', 'assets/alien.png');
+    this.game.load.image('artifact', 'assets/artifact-mysterious-cube.png');
+    this.game.load.image('bird', 'assets/bird.png');
+    this.game.load.image('bones', 'assets/bones.png');
+    this.game.load.image('bug', 'assets/bug.png');
+    this.game.load.image('crystals', 'assets/crystals.png');
+    this.game.load.image('fruittree', 'assets/fruittree.png');
+    this.game.load.image('Stone', 'assets/Stone.png');
+    this.game.load.image('ufo', 'assets/ufo.png');
+
+    this.game.load.image('background', 'assets/background2.png');
+  }
+
+  function create() {
+
+    this.cursors = this.game.input.keyboard.createCursorKeys();
+    this.jumpTimer = this.game.time.now;
+
+    this.game.physics.startSystem(Phaser.Physics.ARCADE);
+    this.game.time.desiredFps = 30;
+    this.game.physics.arcade.gravity.y = 500;
+    this.game.add.tileSprite(0, 0, 800, 600, 'background');
+
+    // Game elemtnts
+
+    // Player
+    this.player = this.game.add.sprite(100, 100, 'alien');
+    this.player.scale.setTo(0.05);
+    this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
+    this.player.body.bounce.y = 0.2;
+    this.player.body.mass = 1000;
+    this.player.body.collideWorldBounds = true;
+
+    // Worm
+    this.worm = this.game.add.sprite(0, 0, 'worm');
+    this.worm.scale.setTo(0.05);
+    this.game.physics.enable(this.worm, Phaser.Physics.ARCADE);
+    this.worm.body.bounce.y = 0.2;
+    this.worm.body.collideWorldBounds = true;
+
+    this.wormAnimat = this.game.add.tween(this.worm);
+    this.wormAnimat.to({x: this.game.width}, 2000, Phaser.Easing.Linear.InOut, true, 1000, 3, true);
+
+
+
+    // Artifact
+    this.artifact = this.game.add.sprite(200, 200, 'artifact');
+    this.artifact.scale.setTo(0.05);
+    this.game.physics.enable(this.artifact, Phaser.Physics.ARCADE);
+    this.artifact.body.collideWorldBounds = true;
+
+    // Bird: attacks a worm
+    this.bird = this.game.add.sprite(300, 0, 'bird');
+    this.bird.scale.setTo(0.05);
+    this.game.physics.enable(this.bird, Phaser.Physics.ARCADE);
+    this.bird.body.collideWorldBounds = true;
+    this.bird.body.allowRotation = false;
+
+    // Bones: use to some shit
+    this.bones = this.game.add.sprite(500, 200, 'bones');
+    this.bones.scale.setTo(0.05);
+    this.game.physics.enable(this.bones, Phaser.Physics.ARCADE);
+    this.bones.body.collideWorldBounds = true;
+
+    // Crystals: use for ufo ?
+    this.crystals = this.game.add.sprite(600, 0, 'crystals');
+    this.crystals.scale.setTo(0.05);
+    this.game.physics.enable(this.crystals, Phaser.Physics.ARCADE);
+    this.crystals.body.collideWorldBounds = true;
+
+    // Fruit tree use for fi hungriness level
+    this.fruittree = this.game.add.sprite(700, 200, 'fruittree');
+    this.game.physics.enable(this.fruittree, Phaser.Physics.ARCADE);
+    this.fruittree.body.collideWorldBounds = true;
+    this.fruittree.scale.setTo(0.05);
+    this.fruittree.anchor.setTo(0.5, 1);
+    this.fruittree.angle = -30;
+
+    // Stone: should be movable
+    this.Stone = this.game.add.sprite(100, 500, 'Stone');
+    this.game.physics.enable(this.Stone, Phaser.Physics.ARCADE);
+    this.Stone.body.collideWorldBounds = true;
+    this.Stone.scale.setTo(0.05);
+    this.Stone.anchor.setTo(0.5);
+
+    // Ufo: just flying aroung
+    this.ufo = this.game.add.sprite(200, 500, 'ufo');
+    this.game.physics.enable(this.ufo, Phaser.Physics.ARCADE);
+    this.ufo.body.collideWorldBounds = true;
+    this.ufo.scale.setTo(0.05);
+
+    // Tweens: so we need this shit?
+    this.animat = this.game.add.tween(this.bird);
+    this.animat.to({x: 0}, 2000, Phaser.Easing.Elastic.InOut, true, 1000, 3, true);
+
+    this.ufoTween = this.game.add.tween(this.ufo);
+    this.ufoTween.to({y: 200}, 3000, Phaser.Easing.Bounce.In, true, 1000, 2, true);
+
+    this.crystalsTween = this.game.add.tween(this.crystals);
+    this.crystalsTween.to({alpha: 0}, 2000, Phaser.Easing.Power2.InOut, true, 1000, 4, true);
+
+    this.treeTween = this.game.add.tween(this.fruittree);
+    this.treeTween.to({angle: 30}, 5000, Phaser.Easing.Sinusoidal.InOut, true, 1000, 19, true);
+
+    this.stoneTween = this.game.add.tween(this.Stone);
+    this.stoneTween.to({
+      width: 0.5,
+      height: 0.5
+    }, 500, Phaser.Easing.Sinusoidal.InOut, true, 1000, 2, true);
+
+  }
+
+  function update() {
+
+    this.bird.rotation = this.game.physics.arcade.moveToPointer(this.bird, 60, this.game.input.activePointer, 500);
+
+    // Collide bird with player
+    this.game.physics.arcade.collide(this.bird, this.player);
+    this.game.physics.arcade.collide(this.bird, this.worm);
+
+    this.player.body.velocity.x = 0;
+
+    if (this.cursors.left.isDown) {
+      this.player.body.velocity.x = -500;
+    }
+    else if (this.cursors.right.isDown) {
+      this.player.body.velocity.x = 500;
+    }
+
+    if (this.cursors.up.isDown && this.player.body.onFloor() && this.game.time.now > this.jumpTimer) {
+      console.log('up');
+      this.player.body.velocity.y = -400;
+      this.jumpTimer = this.game.time.now + 750;
+    }
+
+  }
+
+  function getWidth() {
+    if (self.innerHeight) {
+      return self.innerWidth;
+    }
+
+    if (document.documentElement && document.documentElement.clientHeight) {
+      return document.documentElement.clientWidth;
+    }
+
+    if (document.body) {
+      return document.body.clientWidth;
+    }
+  }
+</script>
+</body>
+</html>
