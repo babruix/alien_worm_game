@@ -31,26 +31,50 @@ AlienGame.prototype = {
     this.game.load.image('stone', 'assets/stone.png');
 
     this.game.load.image('background', 'assets/background2.png');
+
+    game.load.tilemap('map', 'assets/maps/collision test.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.image('ground_1x1', 'assets/tilemaps/tiles/ground_1x1.png');
+    game.load.image('tiles2', 'assets/tilemaps/tiles/kenney.png');
   },
 
   create: function () {
+    game.physics.startSystem(Phaser.Physics.P2JS);
+    game.stage.backgroundColor = '#2d2d2d';
+
+    this.map = game.add.tilemap('map');
+
+    this.map.addTilesetImage('ground_1x1');
+    this.map.addTilesetImage('tiles2');
+
+    this.layer = this.map.createLayer('Tile Layer 1');
+    this.layer2 = this.map.createLayer('Tile Layer 2');
+    this.layer.debug = true;
+    this.layer.resizeWorld();
+
+    //  Set the tiles for collision.
+    //  Do this BEFORE generating the p2 bodies below.
+    this.map.setCollisionBetween(1, 100);
+
+    //  Convert the tilemap layer into bodies. Only tiles that collide (see above) are created.
+    //  This call returns an array of body objects which you can perform addition actions on if
+    //  required. There is also a parameter to control optimising the map build.
+    game.physics.p2.convertTilemap(this.map, this.layer);
+
+    game.physics.p2.restitution = 0.5;
+    game.physics.p2.gravity.y = 300;
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
 
-    this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.time.desiredFps = 30;
-    this.game.physics.arcade.gravity.y = 1500;
-    this.game.add.tileSprite(0, 0, 800, 600, 'background');
 
     // Game elemtnts
 
     // Player
     this.player = this.game.add.sprite(100, 100, 'alien');
-    this.player.scale.setTo(0.05);
-    this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
-    this.player.body.bounce.y = 0.2;
-    this.player.body.mass = 1000;
-    this.player.body.collideWorldBounds = true;
+    this.player.scale.setTo(0.02);
+    game.physics.p2.enable(this.player);
+    this.player.body.fixedRotation = true;
+    game.camera.follow(this.player);
 
     // Worm
     this.worm = this.game.add.sprite(0, 0, 'worm');
@@ -60,7 +84,7 @@ AlienGame.prototype = {
     this.worm.body.collideWorldBounds = true;
 
     this.wormAnimat = this.game.add.tween(this.worm);
-    this.wormAnimat.to({x: this.worm.x+100}, 500, Phaser.Easing.Linear.InOut, true, 1000, 3, true);
+    this.wormAnimat.to({x: this.worm.x + 100}, 500, Phaser.Easing.Linear.InOut, true, 1000, 3, true);
 
 
     // Artifact
@@ -133,34 +157,38 @@ AlienGame.prototype = {
     this.player.body.velocity.x = 0;
 
     if (this.cursors.left.isDown) {
-      this.player.body.velocity.x = -500;
+      this.player.body.moveLeft(200);
     }
     else if (this.cursors.right.isDown) {
-      this.player.body.velocity.x = 500;
+      this.player.body.moveRight(200);
     }
 
     if (this.cursors.up.isDown
-      && this.player.body.onFloor()
+      && AlienGame.prototype.checkIfCanJump(this.player)
       && this.game.time.now > this.jumpTimer) {
 
-      this.player.body.velocity.y = -500;
+      this.player.body.moveUp(500);
       this.jumpTimer = this.game.time.now + 750;
     }
 
+  },
+
+  checkIfCanJump: function (player) {
+    console.log(player);
+    var yAxis = p2.vec2.fromValues(0, 1);
+    var result = false;
+
+    for (var i = 0; i < game.physics.p2.world.narrowphase.contactEquations.length; i++) {
+      var c = game.physics.p2.world.narrowphase.contactEquations[i];
+
+      if (c.bodyA === player.body.data || c.bodyB === player.body.data) {
+        var d = p2.vec2.dot(c.normalA, yAxis); // Normal dot Y-axis
+        if (c.bodyA === player.body.data) d *= -1;
+        if (d > 0.5) result = true;
+      }
+    }
+
+    return result;
   }
 
 };
-
-function getWidth() {
-  if (self.innerHeight) {
-    return self.innerWidth;
-  }
-
-  if (document.documentElement && document.documentElement.clientHeight) {
-    return document.documentElement.clientWidth;
-  }
-
-  if (document.body) {
-    return document.body.clientWidth;
-  }
-}
