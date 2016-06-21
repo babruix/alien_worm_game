@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="18" tilewidth="32" tileheight="32" nextobjectid="19">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="18" tilewidth="32" tileheight="32" nextobjectid="20">
  <tileset firstgid="1" name="ground_1x1" tilewidth="32" tileheight="32" tilecount="25" columns="25">
   <image source="../tilemaps/tiles/ground_1x1.png" width="800" height="32"/>
   <tile id="1">
@@ -33,5 +33,6 @@
   <object id="16" gid="42" x="252" y="545" width="70" height="70"/>
   <object id="17" gid="42" x="313" y="545" width="70" height="70"/>
   <object id="18" gid="42" x="370" y="543" width="70" height="70"/>
+  <object id="19" gid="81" x="248" y="454" width="70" height="70"/>
  </objectgroup>
 </map>

@@ -60,8 +60,8 @@ AlienGame.prototype = {
     //  required. There is also a parameter to control optimising the map build.
     game.physics.p2.convertTilemap(this.map, this.layer);
 
-    game.physics.p2.restitution = 0.5;
-    game.physics.p2.gravity.y = 300;
+    game.physics.p2.restitution = 1;
+    game.physics.p2.gravity.y = 500;
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
 
@@ -157,17 +157,17 @@ AlienGame.prototype = {
     this.player.body.velocity.x = 0;
 
     if (this.cursors.left.isDown) {
-      this.player.body.moveLeft(200);
+      this.player.body.moveLeft(300);
     }
     else if (this.cursors.right.isDown) {
-      this.player.body.moveRight(200);
+      this.player.body.moveRight(300);
     }
 
     if (this.cursors.up.isDown
       && AlienGame.prototype.checkIfCanJump(this.player)
       && this.game.time.now > this.jumpTimer) {
 
-      this.player.body.moveUp(500);
+      this.player.body.moveUp(400);
       this.jumpTimer = this.game.time.now + 750;
     }
 
