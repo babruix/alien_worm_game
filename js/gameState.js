@@ -50,7 +50,7 @@ AlienGame.prototype = {
     game.load.image('ground_1x1', 'assets/tilemaps/tiles/ground_1x1.png');
     game.load.image('kenney', 'assets/tilemaps/tiles/kenney.png');
     game.load.spritesheet('player', 'assets/p1_spritesheet.png', 73, 96, 16);
-    this.game.load.spritesheet('slimeWalk', 'assets/slimeWalk.png', 50, 28);
+    this.game.load.spritesheet('slime-walk', 'assets/slime-walk.png', 50, 28);
 
   },
 
@@ -115,7 +115,7 @@ AlienGame.prototype = {
     game.physics.p2.enable(this.player);
     this.player.body.fixedRotation = true;
 
-    this.slime = game.add.sprite(100, 100, 'slimeWalk');
+    this.slime = game.add.sprite(100, 100, 'slime-walk');
     this.slime.animations.add('walk', [0,1],10, true);
     this.slime.animations.play('walk', true);
 
