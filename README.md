@@ -12,7 +12,7 @@ You need [Node.js and npm](https://nodejs.org/). You should also have git instal
 
 Clone the repository (or download the ZIP file)
 
-`git clone https://github.com/belohlavek/phaser-es6-boilerplate.git`
+`git clone https://github.com/babruix/alien_worm_game.git`
 
 Install dependencies
 
@@ -36,10 +36,6 @@ minified using UglifyJS.
 Any modification to the files inside the `./src` and `./static` folder will trigger a full page reload.
 
 If you modify the contents of other files, please manually restart the server.
-
-### Modifying `gulpfile.js`
-
-See [gulpfile.md](https://github.com/belohlavek/phaser-es6-boilerplate/blob/master/gulpfile.md)
 
 ## License
 
