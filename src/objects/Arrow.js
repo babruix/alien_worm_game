@@ -5,7 +5,7 @@ class ArrowSprite extends Phaser.Sprite {
 
     this.game.stage.addChild(this);
     this.scale.set(0.2);
-    this.alpha = 0.5;
+    this.alpha = 0.2;
     this.anchor.setTo(0.5, 1.3);
     this.animations.add('rotate', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 30, true);
     this.animations.play('rotate', 30, true);
@@ -22,8 +22,19 @@ class ArrowSprite extends Phaser.Sprite {
     this.y = this.currentlyControlling === 'player'
       ? playerObject.y
       : wormObject.y;
+
+    let playerHoldsOn = this.currentlyControlling === 'player' && playerObject.body.velocity.x === 0;
+    let wormHoldsOn = this.currentlyControlling === 'worm' && wormObject.body.velocity.x === 0;
+    if (playerHoldsOn || wormHoldsOn) {
+      this.scale.set(0.8);
+      this.anchor.setTo(0.5, 1);
+    } else {
+      this.anchor.setTo(0.5, 1.3);
+      this.scale.set(0.2);
+    }
   }
 
+  // Note: 'this' here is context from Main!
   static switchPlayer () {
     if (this.tabButton.arrow.currentlyControlling === 'player') {
       this.tabButton.arrow.currentlyControlling = 'worm';

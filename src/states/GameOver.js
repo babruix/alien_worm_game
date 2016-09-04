@@ -3,11 +3,10 @@ class GameOver extends Phaser.State {
 
 	init(Main) {
 		Main.tree.kill();
-		Main.ufo.kill();
-		Main.slime.kill();
 		Main.bird.kill();
-		Main.ufo.kill();
-		Main.ship.kill();
+		// Main.slime.kill();
+		// Main.ufo.kill();
+		// Main.ship.kill();
 		if (Main.keySprite) {
 			Main.keySprite.kill();
 		}
@@ -26,7 +25,7 @@ OVER
 		this.RainbowText = new RainbowText(this.game, center.x, center.y, text);
 		this.RainbowText.anchor.set(0.5);
 		this.game.input.onDown.addOnce(this.restartGame, this);
-		this.game.time.events.add(Phaser.Timer.SECOND * 10, this.restartGame, this);
+		this.game.time.events.add(Phaser.Timer.SECOND * 2, this.restartGame, this);
 	}
 
 	restartGame() {

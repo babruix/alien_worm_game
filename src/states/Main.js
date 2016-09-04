@@ -40,8 +40,6 @@ class Main extends Phaser.State {
 		this.lockerGroup = this.game.add.group();
 		this.lockerGroup.enableBody = true;
 
-		this.ufo = new Ufo(this.game, 100, 50);
-
 		// And now we convert all of the ground objects with an ID of 59 into sprites within the ground group
 		this.map.createFromObjects('Object Layer 1', 59, 'ground', 0, true, false, this.groundGroup);
 		this.map.createFromObjects('Object Layer 1', 109, 'box_warn', 0, true, false, this.boxGroup);
@@ -52,18 +50,20 @@ class Main extends Phaser.State {
 		this.map.createFromObjects('Object Layer 1', 118, 'locker', 0, true, false, this.lockerGroup);
 		this.lockerGroup.setAll('body.immovable', true);
 
-		this.bird = new Bird(this.game, 800, 50);
-		this.slime = new Slime(this.game, 100, 700);
-		this.ship = new Ship(this.game, 200,200);
 		this.enablePlatforms();
+		// this.bird = new Bird(this.game, 800, 50);
 
+		/*
+		 this.ufo = new Ufo(this.game, 100, 50);
+		 this.ship = new Ship(this.game, 200,200);
+		 this.slime = new Slime(this.game, 100, 700);
 		let mush = this.game.add.sprite(150, 515, 'mushroom_red');
 		mush.scale.setTo(0.5);
 
 		let cryst = this.game.add.sprite(500, 415, 'crystals');
 		cryst.scale.setTo(0.4);
 		cryst.animations.add('glow', [2, 1, 0]);
-		cryst.animations.play('glow', 10, true);
+		cryst.animations.play('glow', 10, true);*/
 	}
 
 	enablePlatforms() {
@@ -102,7 +102,7 @@ class Main extends Phaser.State {
 
 		// Player Collisions
 		this.game.physics.arcade.collide(this.playerObject, this.layer, (player, tile) => {
-			if (tile.index === 119 && this.playerObject.lastHeartTime < this.game.time.now + 1000) {
+			if (tile.index === 119 && this.playerObject.lastHeartTime < this.game.time.now + 2000) {
 				// lava
 				player.hitLava();
 				this.playerObject.lastHeartTime = this.game.time.now;
@@ -112,24 +112,24 @@ class Main extends Phaser.State {
 				alert('Du vinare!')
 			}
 		});
-		this.game.physics.arcade.collide(this.bird, this.layer, (bird, tile) => {
-		});
+		// this.game.physics.arcade.collide(this.bird, this.layer, (bird, tile) => {});
 		this.game.physics.arcade.collide(this.playerObject, this.lockerGroup, (player, locker) => {
 			if (this.hasGreenKey) {
 				this.lockerGroup.callAll('kill');
 			}
 		});
+		/*
 		this.game.physics.arcade.collide(this.playerObject, this.bird, (player, bird) => {
-			if (this.playerObject.lastHeartTime < this.game.time.now + 1000) {
+			if (this.bird.lastHeartTime < this.game.time.now + 2000) {
 				this.game.camera.shake(0.005, 70);
-				this.playerObject.health -= 0.2;
-				this.bird.body.velocity.x *= 3;
-				this.bird.body.velocity.y *= 3;
-				this.playerObject.lastHeartTime = this.game.time.now;
+				this.bird.health -= 0.1;
+				this.bird.lastHeartTime = this.game.time.now;
 			}
-			// this.bird.kill();
-			// this.bird = new Bird(this.game, 100, 100);
-		});
+			if (this.bird.health < 0) {
+				this.bird.kill();
+				this.bird = new Bird(this.game, 100, 100);
+			}
+		});*/
 		this.game.physics.arcade.collide(this.playerObject, this.tree.children,
 				Player.eatCherry, function () {}, this);
 		this.game.physics.arcade.overlap(this.playerObject, this.boxGroup,
@@ -163,8 +163,8 @@ class Main extends Phaser.State {
 			this.wormObject.move(this.cursors, this.map, this.layer);
 		}
 
-		this.slime.moveToWorm.call(this);
-		this.bird.moveToPlayer.call(this);
+		// this.slime.moveToWorm.call(this);
+		// this.bird.moveToTree.call(this);
 
 		// Arrow
 		this.tabButton.arrow.updatePosition(this.playerObject, this.wormObject);
@@ -204,6 +204,10 @@ class Main extends Phaser.State {
 
     this.game.debug.text(text, 0, 100);
 		this.game.debug.text(`health: ${this.playerObject.health}`, 0, 130);
+		// this.game.debug.text(`dist: ${this.game.physics.arcade.distanceBetween(this.bird, this.tree)} `, 0, 150);
+
+
+		// if(this.game.physics.arcade.distanceBetween(this.bird, this.tree) > 30)
 	}
 
 	addNewTree() {

@@ -11,9 +11,6 @@ class Worm extends Phaser.Sprite {
     this.game.physics.arcade.enable(this);
     this.body.collideWorldBounds = true;
     this.body.fixedRotation = true;
-
-    this.animations.play('walk', 20, true);
-
     this.y = 800;
   }
 

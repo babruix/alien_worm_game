@@ -12,15 +12,14 @@ class BirdSprite extends Phaser.Sprite {
     this.body.gravity.x = 1;
 
     this.body.collideWorldBounds = true;
-    this.body.bounce.y = 1.01;
+    this.body.bounce.y = 0.8;
     this.anchor.setTo(0.4);
     this.animations.add('fly', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 2);
     this.animations.play('fly', 60, true);
-    // this.game.add.tween(this).to({y: 700}, 2000, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+    this.lastHeartTime = this.game.time.now;
   }
 
   update() {
-
     if (this.body.velocity.x < 0) {
       if (this.scale.x > 0) {
         this.scale.x *= -1;
@@ -35,8 +34,24 @@ class BirdSprite extends Phaser.Sprite {
 
 
   // Note: 'this' here is context from Main!
-  moveToPlayer() {
-    this.game.physics.arcade.moveToObject(this.bird, this.playerObject, 200);
+  moveToTree() {
+    if (this.game.physics.arcade.distanceBetween(this.bird, this.tree) > 15) {
+      this.game.physics.arcade.moveToObject(this.bird, this.tree, 200);
+    }
+    else {
+      this.bird.eatCherry(this.bird, this.tree);
+    }
+  }
+
+  eatCherry(bird, tree) {
+    if (tree.countCherriesAlive() > 0) {
+      tree.children.forEach(function (cherry) {
+        if (cherry.alive) {
+          cherry.kill();
+          bird.health++;
+        }
+      });
+    }
   }
 }
 
