@@ -9,7 +9,7 @@ class CherrySprite extends Phaser.Sprite {
     this.anchor.setTo(0.5, 0);
     this.angle = -30;
     game.physics.arcade.enable(this);
-    game.add.tween(this).to({angle: 30}, 1000, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+    game.add.tween(this).to({angle: 30}, 700, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
   }
 }
 

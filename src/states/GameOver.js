@@ -3,7 +3,7 @@ class GameOver extends Phaser.State {
 
 	init(Main) {
 		Main.tree.kill();
-		Main.bird.kill();
+		// Main.bird.kill();
 		// Main.slime.kill();
 		// Main.ufo.kill();
 		// Main.ship.kill();

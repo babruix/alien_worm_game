@@ -112,6 +112,7 @@ class Main extends Phaser.State {
 				alert('Du vinare!')
 			}
 		});
+		this.game.physics.arcade.TILE_BIAS = 40;
 		// this.game.physics.arcade.collide(this.bird, this.layer, (bird, tile) => {});
 		this.game.physics.arcade.collide(this.playerObject, this.lockerGroup, (player, locker) => {
 			if (this.hasGreenKey) {
@@ -173,6 +174,15 @@ class Main extends Phaser.State {
 		if (this.playerObject.health < 0) {
 			this.game.state.start("GameOver", true, false, this);
 		}
+
+
+		// ugly hack to fix player/worm vertical position
+		if (this.playerObject.y > 510) {
+			this.playerObject.y = 510;
+		}
+		if (this.wormObject.y < 600) {
+			this.y = 600;
+		}
 	}
 
 	createTileMap() {
@@ -205,7 +215,7 @@ class Main extends Phaser.State {
     this.game.debug.text(text, 0, 100);
 		this.game.debug.text(`health: ${this.playerObject.health}`, 0, 130);
 		// this.game.debug.text(`dist: ${this.game.physics.arcade.distanceBetween(this.bird, this.tree)} `, 0, 150);
-
+		this.game.debug.text(`player y = ${this.playerObject.y}`, 0, 200);
 
 		// if(this.game.physics.arcade.distanceBetween(this.bird, this.tree) > 30)
 	}

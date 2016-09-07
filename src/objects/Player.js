@@ -71,11 +71,6 @@ class Player extends Phaser.Sprite {
       this.body.velocity.y -= 600;
       this.jumpTimer = this.game.time.now + 750;
     }
-
-    // ugly hack to fix player vertical position
-    if (this.y > 510) {
-      this.y = 450;
-    }
 	}
 
   hitLadder(sprite, tile) {

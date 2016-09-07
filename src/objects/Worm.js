@@ -47,9 +47,6 @@ class Worm extends Phaser.Sprite {
       this.animations.stop('walk');
       this.frame = 0;
     }
-    if (this.y < 600) {
-      this.y = 600;
-    }
   }
 
   static digGroud(worm, ground) {
