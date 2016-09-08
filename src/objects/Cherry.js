@@ -1,4 +1,3 @@
-
 class CherrySprite extends Phaser.Sprite {
 
   constructor(game, x, y) {

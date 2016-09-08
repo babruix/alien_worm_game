@@ -24,7 +24,9 @@ class ArrowSprite extends Phaser.Sprite {
       : wormObject.y;
 
     let playerHoldsOn = this.currentlyControlling === 'player' && playerObject.body.velocity.x === 0;
-    let wormHoldsOn = this.currentlyControlling === 'worm' && wormObject.body.velocity.x === 0;
+    let wormHoldsOn = this.currentlyControlling === 'worm'
+      && wormObject.body.velocity.x === 0
+      && wormObject.body.velocity.y === 0;
     if (playerHoldsOn || wormHoldsOn) {
       this.scale.set(0.8);
       this.anchor.setTo(0.5, 1);

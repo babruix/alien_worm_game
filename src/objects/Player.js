@@ -34,6 +34,17 @@ class Player extends Phaser.Sprite {
 	update () {
     this.health = this.health - 0.001;
     this.healthBar.setPercent(this.health * 10);
+    if (this.health < 2) {
+      if (!this.healthBar.blinkTween) {
+        this.healthBar.blinkTween = this.game.add.tween(this.healthBar.barSprite)
+        .to({alpha:0}, 200, Phaser.Easing.Exponential.InOut, true, 0, -1, true);
+      }
+    }
+    else if (this.healthBar.blinkTween) {
+      this.healthBar.blinkTween.stop();
+      this.healthBar.barSprite.alpha = 1;
+      this.healthBar.blinkTween = null;
+    }
   }
 
   static takeBox(player, box) {
