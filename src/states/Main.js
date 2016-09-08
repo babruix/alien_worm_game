@@ -29,8 +29,8 @@ class Main extends Phaser.State {
 
     this.addNewTree();
     this.tree.cherries = this.game.add.group();
-    this.groundGroup = this.game.add.group();
     this.boxGroup = this.game.add.group();
+    this.groundGroup = this.game.add.group();
     this.verticalplatformsGroup = this.game.add.group();
     this.horizontalPlatformsGroup = this.game.add.group();
     this.lockerGroup = this.game.add.group();
@@ -119,6 +119,7 @@ class Main extends Phaser.State {
         this.lockerGroup.callAll('kill');
       }
     });
+
     /*
      this.game.physics.arcade.collide(this.playerObject, this.bird, (player, bird) => {
      if (this.bird.lastHeartTime < this.game.time.now + 2000) {
@@ -130,22 +131,28 @@ class Main extends Phaser.State {
      this.bird.kill();
      this.bird = new Bird(this.game, 100, 100);
      }
-     });*/
+     });
+     */
     this.game.physics.arcade.collide(this.playerObject, this.tree.children,
       Player.eatCherry, function () {
       }, this);
     this.game.physics.arcade.overlap(this.playerObject, this.boxGroup,
-      Player.takeBox, function () {
+      this.playerObject.takeBox, function () {
       }, this);
 
     this.playerObject.platformsLockPlayer.call(this);
 
     // Worm Collisions
     this.game.physics.arcade.collide(this.wormObject, this.layer);
-    this.game.physics.arcade.collide(this.slime, this.layer);
     this.game.physics.arcade.overlap(this.wormObject, this.groundGroup,
       Worm.digGroud, function () {
       }, this);
+    this.game.physics.arcade.overlap(this.wormObject, this.boxGroup,
+      this.playerObject.takeBox, function () {
+      }, this);
+
+    /*
+    this.game.physics.arcade.collide(this.slime, this.layer);
     this.game.physics.arcade.overlap(this.wormObject, this.slime,
       (worm, slime) => {
         this.game.camera.shake(0.005, 70);
@@ -155,6 +162,7 @@ class Main extends Phaser.State {
         // console.log(slime);
       }, function () {
       }, this);
+      */
 
     // Add new tree
     if (this.tree.checkAllCherriesEaten.call(this)) {

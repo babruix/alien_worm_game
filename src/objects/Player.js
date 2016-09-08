@@ -47,8 +47,12 @@ class Player extends Phaser.Sprite {
     }
   }
 
-  static takeBox(player, box) {
-    box.kill();
+  takeBox(player, box) {
+    this.boxTween = this.game.add.tween(box);
+    this.boxTween.to({y: box.y-box.height*2, alpha: 1}, 100, Phaser.Easing.Linear.Out, true);
+    this.boxTween.onComplete.add(function(obj) {
+      box.kill();
+    }, this);
   }
 
   static eatCherry(player, cherry) {
