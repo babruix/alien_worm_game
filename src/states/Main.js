@@ -34,11 +34,13 @@ class Main extends Phaser.State {
     this.verticalplatformsGroup = this.game.add.group();
     this.horizontalPlatformsGroup = this.game.add.group();
     this.lockerGroup = this.game.add.group();
+    this.stoneGroup = this.game.add.group();
+    this.stoneGroup.enableBody = true;
     this.groundGroup.enableBody = true;
     this.boxGroup.enableBody = true;
+    this.lockerGroup.enableBody = true;
     this.verticalplatformsGroup.enableBody = true;
     this.horizontalPlatformsGroup.enableBody = true;
-    this.lockerGroup.enableBody = true;
 
     // And now we convert all of the ground objects with an ID of 59 into sprites within the ground group
     this.map.createFromObjects('Object Layer 1', 59, 'ground', 0, true, false, this.groundGroup);
@@ -48,8 +50,11 @@ class Main extends Phaser.State {
     this.map.createFromObjects('Object Layer 1', 58, 'green_platform', 0, true, false, this.verticalplatformsGroup);
     this.map.createFromObjects('Object Layer 1', 58, 'green_platform', 0, true, false, this.horizontalPlatformsGroup);
     this.map.createFromObjects('Object Layer 1', 118, 'locker', 0, true, false, this.lockerGroup);
+    this.map.createFromObjects('Object Layer 1', 47, 'stone', 0, true, false, this.stoneGroup);
     this.lockerGroup.setAll('body.immovable', true);
-
+    this.stoneGroup.setAll('body.mass', 2);
+    // this.stoneGroup.setAll('body.gravity', {x:0,y:2000});
+    this.stoneGroup.setAll('body.maxVelocity', {x:20,y:200});
     this.enablePlatforms();
     // this.bird = new Bird(this.game, 800, 50);
 
@@ -71,6 +76,7 @@ class Main extends Phaser.State {
       this.game.physics.enable(p, Phaser.Physics.ARCADE);
       p.body.allowGravity = false;
       p.body.immovable = true;
+      p.body.checkCollision.down = false;
       var t = this.add.tween(p.position);
       t.to({y: p.position.y - 200}, 3000, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
     }, this);
@@ -114,6 +120,9 @@ class Main extends Phaser.State {
     });
     this.game.physics.arcade.TILE_BIAS = 40;
     // this.game.physics.arcade.collide(this.bird, this.layer, (bird, tile) => {});
+    this.game.physics.arcade.collide(this.playerObject, this.stoneGroup);
+    this.game.physics.arcade.collide(this.layer, this.stoneGroup);
+    this.game.physics.arcade.collide(this.stoneGroup, this.stoneGroup);
     this.game.physics.arcade.collide(this.playerObject, this.lockerGroup, (player, locker) => {
       if (this.hasGreenKey) {
         this.lockerGroup.callAll('kill');

@@ -13,6 +13,7 @@ class Preload extends Phaser.State {
 
 		this.game.load.tilemap('map', 'assets/maps/collision test.json', null, Phaser.Tilemap.TILED_JSON);
 
+		this.game.load.image('stone', 'assets/tilemaps/tiles/stone.png');
 		this.game.load.image('green_key', 'assets/green_key.png');
 		this.game.load.image('locker', 'assets/tilemaps/tiles/locker.png');
 		this.game.load.image('mushroom_red', 'assets/tilemaps/tiles/mushroom_red.png');

@@ -49,7 +49,7 @@ class Player extends Phaser.Sprite {
 
   takeBox(player, box) {
     this.boxTween = this.game.add.tween(box);
-    this.boxTween.to({y: box.y-box.height*2, alpha: 1}, 100, Phaser.Easing.Linear.Out, true);
+    this.boxTween.to({y: box.y - box.height * 2, alpha: 0}, 150, Phaser.Easing.Linear.Out, true);
     this.boxTween.onComplete.add(function(obj) {
       box.kill();
     }, this);
@@ -81,7 +81,7 @@ class Player extends Phaser.Sprite {
     }
 
     if (cursors.up.isDown
-      && (this.body.onFloor() || this.locked)
+      && (this.body.onFloor() || this.locked || this.body.touching.down)
       && this.game.time.now > this.jumpTimer) {
       this.body.velocity.y -= 600;
       this.jumpTimer = this.game.time.now + 750;
