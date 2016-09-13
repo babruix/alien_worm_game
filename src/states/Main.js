@@ -6,6 +6,7 @@ import Ufo from "../objects/Ufo";
 import Bird from "../objects/Bird";
 import Slime from "../objects/Slime";
 import Ship from "../objects/Ship";
+import RainbowText from "../objects/RainbowText";
 
 class Main extends Phaser.State {
 
@@ -28,6 +29,7 @@ class Main extends Phaser.State {
     this.tabButton.onDown.add(Arrow.switchPlayer, this);
 
     this.addNewTree();
+
     this.tree.cherries = this.game.add.group();
     this.boxGroup = this.game.add.group();
     this.groundGroup = this.game.add.group();
@@ -51,9 +53,11 @@ class Main extends Phaser.State {
     this.map.createFromObjects('Object Layer 1', 58, 'green_platform', 0, true, false, this.horizontalPlatformsGroup);
     this.map.createFromObjects('Object Layer 1', 118, 'locker', 0, true, false, this.lockerGroup);
     this.map.createFromObjects('Object Layer 1', 47, 'stone', 0, true, false, this.stoneGroup);
+
     this.lockerGroup.setAll('body.immovable', true);
     this.stoneGroup.setAll('body.mass', 2);
-    // this.stoneGroup.setAll('body.gravity', {x:0,y:2000});
+    this.stoneGroup.setAll('body.bounce.y', 0);
+    this.stoneGroup.setAll('body.gravity', {x:0,y:200});
     this.stoneGroup.setAll('body.maxVelocity', {x:20,y:200});
     this.enablePlatforms();
     // this.bird = new Bird(this.game, 800, 50);
@@ -69,6 +73,8 @@ class Main extends Phaser.State {
      cryst.scale.setTo(0.4);
      cryst.animations.add('glow', [2, 1, 0]);
      cryst.animations.play('glow', 10, true);*/
+
+    this.showLevelCompleteText();
   }
 
   enablePlatforms() {
@@ -91,11 +97,13 @@ class Main extends Phaser.State {
   }
 
   static platformSep(s, platform) {
-    if (!s.locked) {
-      s.locked = true;
-      s.lockedTo = platform;
-      s.body.velocity.y = 0;
+    if (s.locked) {
+      return;
     }
+
+    s.locked = true;
+    s.lockedTo = platform;
+    s.body.velocity.y = 0;
   }
 
   update() {
@@ -103,19 +111,18 @@ class Main extends Phaser.State {
       this.hasGreenKey = true;
       this.keySprite = this.game.add.sprite(450, 20, 'green_key');
       this.keySprite.fixedToCamera = true;
-      // this.lockerGroup.callAll('kill');
     }
 
     // Player Collisions
     this.game.physics.arcade.collide(this.playerObject, this.layer, (player, tile) => {
       if (tile.index === 119 && this.playerObject.lastHeartTime < this.game.time.now + 2000) {
-        // lava
+        // Lava
         player.hitLava();
         this.playerObject.lastHeartTime = this.game.time.now;
       }
       else if (tile.index === 143) {
-        // exit?
-        alert('Du vinare!')
+        // Level complete
+        this.showLevelCompleteText();
       }
     });
     this.game.physics.arcade.TILE_BIAS = 40;
@@ -204,6 +211,14 @@ class Main extends Phaser.State {
     if (this.wormObject.y < 600) {
       this.y = 600;
     }
+  }
+
+  showLevelCompleteText() {
+    let center = {x: this.game.world.centerX, y: this.game.world.centerY};
+    let text = `Level complete !!!`;
+    this.RainbowText = new RainbowText(this.game, center.x, 0, text);
+    this.RainbowText.anchor.set(0.5);
+    this.game.add.tween(this.RainbowText).to({y: center.y}, 300, null, true);
   }
 
   createTileMap() {

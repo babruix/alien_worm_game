@@ -20,6 +20,7 @@ class Player extends Phaser.Sprite {
 		this.body.collideWorldBounds = true;
 
     this.body.bounce.y = 0.2;
+    this.body.mass = 3;
     this.body.gravity.y = 1500;
     this.body.velocity.x = 100;
 
