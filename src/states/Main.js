@@ -44,7 +44,7 @@ class Main extends Phaser.State {
     this.verticalplatformsGroup.enableBody = true;
     this.horizontalPlatformsGroup.enableBody = true;
 
-    // And now we convert all of the ground objects with an ID of 59 into sprites within the ground group
+    // Convert all of the json objects into sprites within the ground group
     this.map.createFromObjects('Object Layer 1', 59, 'ground', 0, true, false, this.groundGroup);
     this.map.createFromObjects('Object Layer 1', 109, 'box_warn', 0, true, false, this.boxGroup);
     this.map.createFromObjects('Object Layer 1', 150, 'box_orange', 0, true, false, this.boxGroup);
@@ -52,14 +52,17 @@ class Main extends Phaser.State {
     this.map.createFromObjects('Object Layer 1', 58, 'green_platform', 0, true, false, this.verticalplatformsGroup);
     this.map.createFromObjects('Object Layer 1', 58, 'green_platform', 0, true, false, this.horizontalPlatformsGroup);
     this.map.createFromObjects('Object Layer 1', 118, 'locker', 0, true, false, this.lockerGroup);
-    this.map.createFromObjects('Object Layer 1', 47, 'stone', 0, true, false, this.stoneGroup);
-
     this.lockerGroup.setAll('body.immovable', true);
-    this.stoneGroup.setAll('body.mass', 2);
-    this.stoneGroup.setAll('body.bounce.y', 0);
-    this.stoneGroup.setAll('body.gravity', {x:0,y:200});
-    this.stoneGroup.setAll('body.maxVelocity', {x:20,y:200});
-    this.enablePlatforms();
+
+    // Stones
+    this.sp1= this.game.add.sprite(1300, 300,'stone', null, this.stoneGroup);
+    this.sp1.scale.setTo(3);
+    this.stoneGroup.setAll('body.mass', 100);
+    this.stoneGroup.setAll('body.gravity.y', 200);
+    // this.stoneGroup.setAll('body.maxVelocity', {x:20,y:200});
+
+     this.enablePlatforms();
+
     // this.bird = new Bird(this.game, 800, 50);
 
     /*
@@ -74,7 +77,6 @@ class Main extends Phaser.State {
      cryst.animations.add('glow', [2, 1, 0]);
      cryst.animations.play('glow', 10, true);*/
 
-    this.showLevelCompleteText();
   }
 
   enablePlatforms() {
@@ -127,9 +129,8 @@ class Main extends Phaser.State {
     });
     this.game.physics.arcade.TILE_BIAS = 40;
     // this.game.physics.arcade.collide(this.bird, this.layer, (bird, tile) => {});
-    this.game.physics.arcade.collide(this.playerObject, this.stoneGroup);
-    this.game.physics.arcade.collide(this.layer, this.stoneGroup);
-    this.game.physics.arcade.collide(this.stoneGroup, this.stoneGroup);
+    this.game.physics.arcade.collide(this.stoneGroup,this.playerObject );
+    this.game.physics.arcade.collide(this.stoneGroup, this.layer);
     this.game.physics.arcade.collide(this.playerObject, this.lockerGroup, (player, locker) => {
       if (this.hasGreenKey) {
         this.lockerGroup.callAll('kill');
